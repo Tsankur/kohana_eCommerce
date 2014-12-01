@@ -4,7 +4,12 @@ class Controller_Welcome extends Controller {
 
 	public function action_index()
 	{
-		$this->response->body('hello, world!');
+		session_start();
+		$header = View::Factory('header');
+		$header->title = 'Acceuil';
+
+		$view = View::Factory('index');
+		$this->response->body($header.$view);
 	}
 
 } // End Welcome

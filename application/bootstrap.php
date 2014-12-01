@@ -103,8 +103,11 @@ if (isset($_SERVER['KOHANA_ENV']))
  * - boolean  expose      set the X-Powered-By header                        FALSE
  */
 Kohana::init(array(
-	'base_url'   => '/kohana/',
+	'base_url'   => '/kohana_eCommerce/',
+	'index_file'   => FALSE,
 ));
+
+Cookie::$salt = 'zs4sd87gf';
 
 /**
  * Attach the file write to logging. Multiple writers are supported.

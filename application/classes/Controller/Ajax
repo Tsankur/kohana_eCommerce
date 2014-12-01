@@ -1,0 +1,10 @@
+<?php defined('SYSPATH') or die('No direct script access.');
+
+class Controller_Ajax extends Controller {
+
+	public function action_changelanguage()
+	{
+		$lang = $this->request->param('id','en_US');
+		I18n::lang($lang);
+	}
+}
