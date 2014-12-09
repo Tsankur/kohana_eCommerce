@@ -4,7 +4,6 @@ class Controller_User extends Controller {
 
 	public function action_register()
 	{
-		session_start();
 		if(isset($_SESSION['firstName']))
 		{
 			$this->redirect('welcome/index');
@@ -39,6 +38,7 @@ class Controller_User extends Controller {
 									{
 										$_SESSION['firstName'] = $_POST['firstName'];
 										$_SESSION['name'] = $_POST['name'];
+										$_SESSION['id'] = $userid;
 										$this->redirect($referer);
 									}
 									else
@@ -78,7 +78,9 @@ class Controller_User extends Controller {
 			
 			$header = View::Factory('header');
 			$header->referer = $referer;
-			$header->title = 'Formulaire d\'inscription';
+			$header->title = __('Register form');
+			$header->styles = array();
+			$header->scripts = array();
 
 			$view = View::Factory('user/register');
 			$view->_POST = $_POST;
@@ -92,7 +94,6 @@ class Controller_User extends Controller {
 	}
 	public function action_login()
 	{
-		session_start();
 		if(isset($_SESSION['firstName']))
 		{
 			$this->redirect('welcome/index');
@@ -123,6 +124,7 @@ class Controller_User extends Controller {
 								{
 									$_SESSION['firstName'] = $user['first_name'];
 									$_SESSION['name'] = $user['name'];
+									$_SESSION['id'] = $_POST['id'];
 									$this->redirect($referer);
 								}
 								else
@@ -156,7 +158,9 @@ class Controller_User extends Controller {
 			}
 			$header = View::Factory('header');
 			$header->referer = $referer;
-			$header->title = 'Formulaire d\'inscription';
+			$header->title = 'Connection';
+			$header->styles = array();
+			$header->scripts = array();
 
 			$view = View::Factory('user/login');
 			$view->_POST = $_POST;
@@ -165,12 +169,11 @@ class Controller_User extends Controller {
 			{
 				$view->error = $error;
 			}
-			$this->response->body($view.$header);
+			$this->response->body($header.$view);
 		}
 	}
 	public function action_logout()
 	{
-		session_start();
 		session_destroy();
 		$this->redirect($this->request->referrer());
 	}

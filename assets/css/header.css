@@ -1,0 +1,17 @@
+.languages
+{
+	padding: 0 10px;
+	display: flex;
+	align-items: center;
+	height: 50px;
+}
+.languages>img
+{
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+}
+.languages>img+img
+{
+	margin-left: 5px;
+}

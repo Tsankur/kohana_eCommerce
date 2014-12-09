@@ -24,12 +24,16 @@ class Model_UserManager
 		
 		return $user;
 	}
-	function RegisterUser($firstname, $name, $email, $phone_number, $password)
+	function RegisterUser($firstname, $name, $email, $phone_number, $password, $lang)
 	{
-		return $this->db->execute('INSERT INTO users (first_name, name, email, phone_number, password) VALUES (?, ?, ?, ?, ?)', array($firstname, $name, $email, $phone_number, $password));
+		return $this->db->execute('INSERT INTO users (first_name, name, email, phone_number, password, language) VALUES (?, ?, ?, ?, ?, ?)', array($firstname, $name, $email, $phone_number, $password, $lang));
 	}
 	/*function GetUsers()
 	{
 		return $this->db->query('SELECT user_name, pseudo, email, isAdmin, user_id FROM users');
 	}*/
+	function ChangeLanguage($id, $lang)
+	{
+		return $this->db->execute('UPDATE users SET language = ? WHERE id = ?', array($id, $lang));
+	}
 }

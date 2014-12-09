@@ -11,6 +11,7 @@ class Helper_Database
 		if($dbname && $user && $password)
 		{
 			$this->db = new PDO('mysql:host=localhost;dbname='.$dbname, $user, $password);
+			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->db->exec("SET NAMES UTF8");
 		}
 		else

@@ -65,10 +65,16 @@ mb_substitute_character('none');
 
 // -- Configuration and initialization -----------------------------------------
 
+Cookie::$salt = 'zs4sd87gf';
+
 /**
  * Set the default language
  */
 I18n::lang('en-us');
+/**
+ * Load user Language
+ */
+I18n::lang(Helper_Language::detect());
 
 if (isset($_SERVER['SERVER_PROTOCOL']))
 {
@@ -107,7 +113,6 @@ Kohana::init(array(
 	'index_file'   => FALSE,
 ));
 
-Cookie::$salt = 'zs4sd87gf';
 
 /**
  * Attach the file write to logging. Multiple writers are supported.
@@ -138,8 +143,39 @@ Kohana::modules(array(
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
-Route::set('default', '(<controller>(/<action>(/<id>)))')
+Route::set('product', 'product/<id>', array('id'=>'[0-9]+'))
 	->defaults(array(
-		'controller' => 'welcome',
+		'controller' => 'products',
+		'action'     => 'product',
+	));
+
+Route::set('ajax', 'ajax/addtocart(/<id>)')
+	->defaults(array(
+		'controller' => 'ajax',
+		'action'     => 'addtocart',
+	));
+Route::set('ajax', 'ajax/removefromcart(/<id>)')
+	->defaults(array(
+		'controller' => 'ajax',
+		'action'     => 'removefromcart',
+	));
+
+Route::set('ajax', 'ajax/products(/<sort_type>(/<category_id>(/<platform_id>(/<page>))))')
+	->defaults(array(
+		'controller' => 'ajax',
+		'action'     => 'products',
+		'sort_type'  => 'add_date',
+		'category_id'=> '0',
+		'platform_id'=> '0',
+		'page'       => '0',
+	));
+Route::set('user', 'user(/<action>(/<id>))')
+	->defaults(array(
+		'controller' => 'user',
+		'action'     => 'login',
+	));
+Route::set('acceuil', '(<controller>(/<action>(/<id>)))')
+	->defaults(array(
+		'controller' => 'products',
 		'action'     => 'index',
 	));
