@@ -4,6 +4,7 @@
 					var addToCartText = "<?= __('Add to cart'); ?>";
 					var checkoutText = "<?= __('Checkout'); ?>";
 					var cart = <?= json_encode($cart);?>;
+					var myproducts = "<?= $myproducts ?>";
 				</script>
 				<div class="popularProducts col-sm-12">
 					

@@ -29,6 +29,7 @@ class Controller_Products extends Controller {
 
 		$view = View::Factory('index');
 		$view->cart = $this->cart;
+		$view->myproducts = false;
 		$view->popularProducts = $productManager->GetPopularProducts(I18N::lang());
 		$view->categories = $categoryManager->GetCategories();
 		$view->platforms = $platformManager->GetPlatforms();
@@ -48,6 +49,32 @@ class Controller_Products extends Controller {
 		$view->platformsEquivalent = array('Mac'=>'apple', 'Windows'=>'windows', 'Android'=> 'android', 'Linux'=> 'linux');
 		$view->product = $productManager->GetProduct($this->request->param('id'), I18N::lang());
 		$this->response->body($header.$view);
+	}
+	public function action_myproducts()
+	{
+		if(!isset($_SESSION['name']))
+		{
+			$this->redirect('products/index');
+		}
+		else
+		{
+			$productManager = new Model_ProductManager();
+			$categoryManager = new Model_CategoryManager();
+			$platformManager = new Model_PlatformManager();
+
+			$header = View::Factory('header');
+			$header->title = 'Accueil';
+			$header->styles = array('mainPage', 'font-awesome.min');
+			$header->scripts = array('products');
+
+			$view = View::Factory('index');
+			$view->cart = $this->cart;
+			$view->myproducts = true;
+			$view->popularProducts = $productManager->GetPopularProducts(I18N::lang());
+			$view->categories = $categoryManager->GetCategories();
+			$view->platforms = $platformManager->GetPlatforms();
+			$this->response->body($header.$view);
+		}
 	}
 
 } // End Welcome

@@ -24,24 +24,28 @@ function getProducts()
 {
 	productsDiv.empty();
 	$('#waiting_spinner').show();
-	$.ajax(baseURL+"ajax/products/"+sort_type+"/"+category_id+"/"+platform_id+"/"+page).done(function(result){
+	$.ajax(baseURL+(myproducts?"ajax/myproducts/":"ajax/products/")+sort_type+"/"+category_id+"/"+platform_id+"/"+page).done(function(result){
 		var products = result['products'];
-		for (var i = 0; i < products.length; i++) {
+		for (var i = 0; i < products.length; i++)
+		{
 			var product = products[i];
 			var incart = (product['id'] in cart);
 			var elem = '<a href="'+baseURL+'product/'+product['id']+'" title="'+product['name']+'"><div class="product">';
-			elem += '<img src="'+baseURL+'assets/images/products/'+product['image']+'" />';
-			elem += '<p>'+product['name']+'</p>';
-			elem += '<div class="platforms">';
+			elem += '<div><img src="'+baseURL+'assets/images/products/'+product['image']+'" />';
+			elem += '<p>'+product['name']+'</p></div>';
+			elem += '<div><div class="platforms">';
 			var platforms = product['platforms'];
 			for (var j = 0; j < platforms.length; j++)
 			{
 				elem += '<span class="fa fa-'+platformsEquivalent[platforms[j]['name']]+'"></span>';
 			}
 			elem += '</div>';
-			elem += '<div data="'+product['id']+'" class="add-to-cart'+(incart?' selected':'')+'"><p class="add-to-cart-text">'+(incart?checkoutText:addToCartText)+'</p>';
-			elem += '<p class="price">'+parseFloat(product['price']).formatMoney()+'</p></div>';
-			elem += '</div></a>';
+			if(!myproducts)
+			{
+				elem += '<div data="'+product['id']+'" class="add-to-cart'+(incart?' selected':'')+'"><p class="add-to-cart-text">'+(incart?checkoutText:addToCartText)+'</p>';
+				elem += '<p class="price">'+parseFloat(product['price']).formatMoney()+'</p></div>';
+			}
+			elem += '</div></div></a>';
 			productsDiv.append(elem);
 		}
 		$('#waiting_spinner').hide();
@@ -85,6 +89,7 @@ function addToCart(elem, event)
 				});
 			}
 		});
+
 	}
 	else
 	{
@@ -126,17 +131,17 @@ function updateCart()
 	{
 		var newElem = '<div class="product-in-cart">';
 		newElem += '<span class="remove-from-cart glyphicon glyphicon-remove-circle" data="'+productId+'"></span>';
-		newElem += '<div><p>'+cart[productId]['name']+'</p></div>';
+		newElem += '<div><p title="'+cart[productId]['name']+'">'+cart[productId]['name']+'</p></div>';
 		newElem += '<div><p>'+parseFloat(cart[productId]['price']).formatMoney()+'</p></div>';
 		newElem += '</div>';
 		cartProductsDiv.append(newElem);
 
-		$('.remove-from-cart', cartProductsDiv).on('click', function(e){
-			e.preventDefault();
-			removeFromCart(this);
-		});
 		total += parseFloat(cart[productId]['price']);
 	}
+	$('.remove-from-cart', cartProductsDiv).on('click', function(e){
+		e.preventDefault();
+		removeFromCart(this);
+	});
 	$('#total').html(total.formatMoney());
 }
 $(function()

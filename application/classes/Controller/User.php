@@ -124,7 +124,8 @@ class Controller_User extends Controller {
 								{
 									$_SESSION['firstName'] = $user['first_name'];
 									$_SESSION['name'] = $user['name'];
-									$_SESSION['id'] = $_POST['id'];
+									$_SESSION['id'] = $user['id'];
+									$_SESSION['applang'] = $user['language'];
 									$this->redirect($referer);
 								}
 								else
@@ -171,6 +172,10 @@ class Controller_User extends Controller {
 			}
 			$this->response->body($header.$view);
 		}
+	}
+	public function action_changelanguage()
+	{
+		$this->redirect($this->request->referrer());
 	}
 	public function action_logout()
 	{

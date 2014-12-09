@@ -26,8 +26,11 @@
 			$("#logoutButton").on('click', function(){
 				window.location = "<?=URL::base();?>user/logout";
 			});
+			$("#myProductsButton").on('click', function(){
+				window.location = "<?=URL::base();?>products/myproducts";
+			});
 			$(".language").on('click', function(){
-				window.location = "?lang="+$(this).attr('data');
+				window.location = "<?=URL::base();?>user/changelanguage?lang="+$(this).attr('data');
 			});
 		});
 		</script>
@@ -57,10 +60,10 @@
 						
 						<div class="languages navbar-right">
 							<?php if(I18n::lang() != 'fr-fr'): ?>
-								<img class="language" data="fr-fr" src="<?= URL::base();?>assets/images/flags/fr.png" alt="french">
+								<img class="language" data="fr-fr" src="<?= URL::base();?>assets/images/flags/fr.png" title="French">
 							<?php endif; ?>
 							<?php if(I18n::lang() != 'en-us'): ?>
-								<img class="language" data="en-us" src="<?= URL::base();?>assets/images/flags/us.png" alt="english">
+								<img class="language" data="en-us" src="<?= URL::base();?>assets/images/flags/us.png" title="English">
 							<?php endif; ?>
 						</div>
 						<?php if(!isset($_SESSION['name'])): ?>
@@ -76,6 +79,7 @@
 							</form>
 						<?php else: ?>
 							<div class="navbar-form navbar-right" >
+								<button class="btn btn-success" id="myProductsButton" type="button"><?=__('My games');?></button>
 								<button class="btn btn-danger" id="logoutButton" type="button"><?=__('Logout');?></button>
 							</div>
 						<?php endif; ?>

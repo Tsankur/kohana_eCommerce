@@ -34,6 +34,6 @@ class Model_UserManager
 	}*/
 	function ChangeLanguage($id, $lang)
 	{
-		return $this->db->execute('UPDATE users SET language = ? WHERE id = ?', array($id, $lang));
+		return $this->db->execute('UPDATE users SET language = ? WHERE id = ?', array($lang ,$id));
 	}
 }

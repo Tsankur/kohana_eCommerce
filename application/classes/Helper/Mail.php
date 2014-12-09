@@ -11,9 +11,9 @@ class Helper_Mail
 	private $config;
 	private $mailer;
 
-	public function __construct()
+	public function __construct($configFile)
 	{
-		$this->config = new Helper_Config("config.ini");
+		$this->config = new Helper_Config($configFile);
 
 		$host = $this->config->get('host', 'mail');
 		$username = $this->config->get('username', 'mail');
@@ -29,6 +29,10 @@ class Helper_Mail
 	public function send($to, $subject, $body, $isHTML = true)
 	{
 		$message = Swift_Message::newInstance();
+		if($isHTML)
+		{
+			$message->setContentType('text/html');
+		}
 
 		$from = $this->config->get('from', 'mail');
 		$message->setFrom($from);

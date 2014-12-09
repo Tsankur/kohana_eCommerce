@@ -13,7 +13,8 @@ class Helper_Language
 			if(isset($_SESSION['name']))
 			{
 				$userManager = new Model_UserManager();
-				$userManager->ChangeLanguage($lang);
+				$userManager->ChangeLanguage($_SESSION['id'], $lang);
+				$_SESSION['applang'] = $lang;
 			}
 		}
 		else if(isset($_SESSION['applang']))

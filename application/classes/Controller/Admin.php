@@ -64,6 +64,8 @@ class Controller_Admin extends Controller {
 										{
 											$platformManager->SetPlatform($id, $platform);
 										}
+										$mailler = new Helper_Mail('application/config/config.ini');
+										$mailler->send('hadrien.bruley@gmail.com', 'New product added', '<h1>New product added</h1><p>Le produit "'.$_POST['name'].'" a bien été ajouté à la base de donnée.</p>');
 									}
 									else
 									{

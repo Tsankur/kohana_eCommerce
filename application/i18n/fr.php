@@ -32,7 +32,7 @@ return array(
 	'Cart'=>'Panier',
 	'Checkout'=>'Payer',
 	'Total'=>'Total',
-	''=>'',
-	''=>'',
+	'Shopping Cart'=>'Panier',
+	'My games'=>'Mes jeux',
 	''=>'',
 );

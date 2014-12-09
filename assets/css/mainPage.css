@@ -63,36 +63,41 @@ div.main>div>div.popularProducts
 	border-radius: 5px;
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 }
-#products>a>div.product>img
+#products>a>div.product>div:first-of-type>img
 {
 	width: 75px;
 	height: 75px;
 	border-radius: 5px;
 }
-#products>a>div.product>p
+#products>a>div.product>div:first-of-type>p
 {
 	margin: 0;
-}
-#products>a>div.product>p:first-of-type
-{
-	width: 483px;
 	padding-left: 40px;
 }
-#products>a>div.product>div:first-of-type
+#products>a>div.product>div
+{
+	float: right;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding-right: 10px;
+}
+#products>a>div.product>div>div:first-of-type
 {
 	display: flex;
 	justify-content: flex-end;
 	width: 100px;
-	padding-right: 10px;
 	font-size: 20px;
 	color: grey;
+	margin-right: 10px;
 }
-#products>a>div.product>div:first-of-type>span+span
+#products>a>div.product>div>div:first-of-type>span+span
 {
 	margin-left: 5px;
 }
-#products>a>div.product>div:last-of-type>p
+#products>a>div.product>div>div:last-of-type>p
 {
 	right: 0px;
 	bottom: 0px;
@@ -109,8 +114,10 @@ div.main>div>div.popularProducts
 #product>div.producthead
 {
 	border-radius: 5px;
+	margin-bottom: 10px;
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 }
 #product>div.producthead>img
 {
@@ -125,9 +132,10 @@ div.main>div>div.popularProducts
 	background-color: #D6D6D6;
 	display: flex;
 	align-items: center;
-	margin-left: 50px;
-	width: 980px;
+	justify-content: space-between;
 	height: 75px;
+	padding-right: 10px;
+	width: calc(100% - 126px);
 }
 #product>div.producthead>div.basicInfo>p
 {
@@ -135,10 +143,9 @@ div.main>div>div.popularProducts
 }
 #product>div.producthead>div.basicInfo>p:first-of-type
 {
-	width: 700px;
 	padding-left: 40px;
 }
-#product>div.producthead>div.basicInfo>div:first-of-type
+/*#product>div.producthead>div.basicInfo>div:first-of-type
 {
 	display: flex;
 	justify-content: flex-end;
@@ -150,6 +157,28 @@ div.main>div>div.popularProducts
 #product>div.producthead>div.basicInfo>div:first-of-type>span+span
 {
 	margin-left: 5px;
+}*/
+#product>div.productbody>aside
+{
+	border-radius: 5px;
+	border: 1px solid #B6B6B6;
+	background-color: #D6D6D6;
+}
+#product>div.productbody>aside>.platforms span
+{
+	font-size: 20px;
+}
+#product>div.productbody>aside>.platforms span+span
+{
+	margin-left: 5px;
+}
+#product>div.productbody>aside h3
+{
+	margin-top: 10px;
+}
+#product>div.productbody>aside>.categories ul
+{
+	padding-left: 30px;
 }
 div.add-to-cart
 {
@@ -177,11 +206,11 @@ div.add-to-cart.selected:hover
 	position: absolute;
 }
 
-div.product>div:last-of-type:hover>p.price, div.producthead>div.basicInfo>div:last-of-type:hover>p.price
+div.product>div>div:last-of-type:hover>p.price, div.producthead>div.basicInfo>div:last-of-type:hover>p.price
 {
 	visibility: hidden;
 }
-div.product>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.basicInfo>div:last-of-type:hover>p.add-to-cart-text
+div.product>div>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.basicInfo>div:last-of-type:hover>p.add-to-cart-text
 {
 	visibility: visible;
 }
@@ -233,6 +262,7 @@ div.product>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.basic
 }
 #cart-content
 {
+	overflow-y: auto;
 	top: 0px;
 	right: -300px;
 	bottom: 0px;
@@ -274,9 +304,9 @@ div.product>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.basic
 }
 #cart-content>div#products-in-cart
 {
-	min-height: 50px;
-	overflow-y: scroll;
-	max-height: calc(100%-79-70-70);
+	min-height: 60px;
+	overflow-y: auto;
+	max-height: calc(100% - 252px);
 	background-color: white;
 }
 #cart-content>div#products-in-cart>.product-in-cart
@@ -296,11 +326,13 @@ div.product>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.basic
 	display: inline-block;
 	text-overflow: ellipsis;
 	overflow: hidden;
+	white-space: nowrap;
 	height: 20px;
 }
 #cart-content>div#products-in-cart>.product-in-cart>div>p
 {
 	margin: 0;
+	display: inline;
 }
 #cart-content>div#products-in-cart>.product-in-cart>:nth-child(1)
 {

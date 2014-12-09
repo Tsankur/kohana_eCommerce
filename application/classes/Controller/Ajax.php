@@ -1,7 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Controller_Ajax extends Controller {
-
+class Controller_Ajax extends Controller
+{
+	private $sortdesc = array('add_date'=>true, 'sells'=>true, 'views'=>true, 'name'=>false);
 	private function sendBack($data)
 	{
 		$this->response->headers('Content-type', 'application/json');
@@ -10,12 +11,24 @@ class Controller_Ajax extends Controller {
 	public function action_products()
 	{
 		$productManager = new Model_ProductManager();
-		$this->sendBack($productManager->GetProductsBy($this->request->param('sort_type'), false, I18N::lang(), $this->request->param('category_id'), $this->request->param('platform_id'), $this->request->param('page')));
+		$this->sendBack($productManager->GetProductsBy($this->request->param('sort_type'), $this->sortdesc[$this->request->param('sort_type')], I18N::lang(), $this->request->param('category_id'), $this->request->param('platform_id'), $this->request->param('page')));
+	}
+	public function action_myproducts()
+	{
+		if(isset($_SESSION['name']))
+		{
+			$productManager = new Model_ProductManager();
+			$this->sendBack($productManager->GetProductsByFor($this->request->param('sort_type'), $_SESSION['id'], $this->sortdesc[$this->request->param('sort_type')], I18N::lang(), $this->request->param('category_id'), $this->request->param('platform_id'), $this->request->param('page')));
+		}
+		else
+		{
+			$this->sendBack(0);
+		}
 	}
 	public function action_getproduct()
 	{
 		$productManager = new Model_ProductManager();
-		$this->sendBack($productManager->GetProductSort($this->request->param('id'), I18N::lang()));
+		$this->sendBack($productManager->GetProductShort($this->request->param('id'), I18N::lang()));
 	}
 	public function action_addtocart()
 	{
