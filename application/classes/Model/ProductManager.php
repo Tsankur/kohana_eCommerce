@@ -143,4 +143,8 @@ class Model_ProductManager
 	{
 		return $this->db->execute('UPDATE products SET views = views + 1 WHERE id = ?', array($id));
 	}
+	function BuyProduct($id)
+	{
+		return $this->db->execute('UPDATE products SET sells = sells + 1 WHERE id = ?', array($id));
+	}
 }

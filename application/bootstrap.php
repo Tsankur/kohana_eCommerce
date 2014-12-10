@@ -76,6 +76,11 @@ I18n::lang('en-us');
  */
 I18n::lang(Helper_Language::detect());
 
+if(!isset($_SESSION['cart']))
+{
+	$_SESSION['cart'] = array();
+}
+
 if (isset($_SERVER['SERVER_PROTOCOL']))
 {
 	// Replace the default protocol.

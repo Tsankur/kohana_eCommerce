@@ -41,6 +41,12 @@ div.main>div>div.popularProducts
 	padding: 50px 0;
 	font-size: 50px;
 }
+#payment_waiting_spinner
+{
+	text-align: center;
+	padding: 20px 0;
+	font-size: 30px;
+}
 
 /* page articles */
 #products
@@ -306,7 +312,7 @@ div.product>div>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.b
 {
 	min-height: 60px;
 	overflow-y: auto;
-	max-height: calc(100% - 252px);
+	max-height: calc(100% - 409px);
 	background-color: white;
 }
 #cart-content>div#products-in-cart>.product-in-cart
@@ -377,9 +383,23 @@ div.product>div>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.b
 #cart-content>div#checkout
 {
 	padding: 30px 0;
+	cursor: pointer;
 }
 #cart-content>div#checkout>p
 {
+	margin: 0;
+}
+#cart-content>div#info-form
+{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: left;
+}
+#cart-content>p#cartError
+{
+	text-align: center;
+	color: red;
+	padding: 10px 0;
 	margin: 0;
 }
 .tocart

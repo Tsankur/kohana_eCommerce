@@ -64,6 +64,7 @@ function CloseCart()
 {
 	$('#cart-content').css('right', '-300px');
 	$('#grey-veil').fadeOut(500);
+	$("#cartError").hide();
 }
 function addToCart(elem, event)
 {
@@ -125,6 +126,14 @@ function updateCart()
 	{
 		$(".cart-s").html('');
 	}
+	if(Object.keys(cart).length > 0)
+	{
+		$("#info-form").show();
+	}
+	else
+	{
+		$("#info-form").hide();
+	}
 	var total = 0;
 	cartProductsDiv.empty();
 	for(var productId in cart)
@@ -144,9 +153,28 @@ function updateCart()
 	});
 	$('#total').html(total.formatMoney());
 }
+function checkoutPayment()
+{
+	$('#payment_waiting_spinner').show();
+	$.ajax(baseURL+"ajax/paycart", {method: 'post', data: {'card_type': 'visa'}}).done(function(result){
+		$('#cartError').show();
+		if(result["status"] == "error")
+		{
+			$("#cartError").html(result['error'])
+		}
+		else if(result["status"] == "success")
+		{
+			$("#cartError").html(result['message'])
+		}
+		$('#payment_waiting_spinner').hide();
+	});
+}
 $(function()
 {
+	$("#info-form").hide();
 	$('#waiting_spinner').hide();
+	$('#payment_waiting_spinner').hide();
+	$('#cartError').hide();
 	productsDiv = $('#products');
 	cartProductsDiv = $("#products-in-cart");
 	if(productsDiv.length)
@@ -191,6 +219,10 @@ $(function()
 	$('.add-to-cart').on('click', function(e){
 		e.preventDefault();
 		addToCart(this, e);
+	});
+	$("#checkout").on('click', function(e)
+	{
+		checkoutPayment();
 	});
 	console.log(cart);
 	updateCart();

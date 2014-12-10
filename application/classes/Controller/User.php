@@ -179,7 +179,9 @@ class Controller_User extends Controller {
 	}
 	public function action_logout()
 	{
+		$cart = $_SESSION['cart'];
 		session_destroy();
+		$_SESSION['cart'] = $cart;
 		$this->redirect($this->request->referrer());
 	}
 
