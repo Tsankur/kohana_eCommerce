@@ -3,7 +3,7 @@ class Model_ProductManager
 {
 	private $db;
 	private $allowedSort;
-	private $productsPerPage = 20;
+	private $productsPerPage = 1;
 	function __construct()
 	{
 		$this->allowedSort = array('add_date', 'sells', 'views', 'name');
@@ -23,12 +23,6 @@ class Model_ProductManager
 		
 		$result['platforms'] = $this->db->query('SELECT platforms.name FROM platforms_relationship INNER JOIN platforms ON platforms_relationship.platform_id = platforms.id WHERE platforms_relationship.product_id = ?', array($id));
 		return $result;
-	}
-	function GetPopularProducts($lang='en-us')
-	{
-		$products = $this->db->query('SELECT * FROM products LEFT JOIN descriptions on products.id = descriptions.product_id WHERE descriptions.lang = :lang AND add_date > (CURRENT_TIMESTAMP - 3600*24*30) ORDER BY add_date LIMIT 5', array(':lang'=>$lang));
-		
-		return $products;
 	}
 	function GetProductsBy($sortType, $desc = false, $lang = 'en-us', $category_id = 0, $platform_id = 0, $page = 0)
 	{
@@ -131,6 +125,10 @@ class Model_ProductManager
 		}
 		return null;	
 	}
+	function GetProductsFor($user_id)
+	{
+		return $this->db->query('SELECT product_id FROM owned_products WHERE user_id = ?', array($user_id));	
+	}
 	function AddProduct($name, $price, $image)
 	{
 		return $this->db->execute('INSERT INTO products (name, price, image) VALUES (?, ?, ?)', array($name, $price, $image));
@@ -146,5 +144,9 @@ class Model_ProductManager
 	function BuyProduct($id)
 	{
 		return $this->db->execute('UPDATE products SET sells = sells + 1 WHERE id = ?', array($id));
+	}
+	function AddOwnedProduct($user_id, $product_id)
+	{
+		return $this->db->execute('INSERT INTO owned_products (product_id, user_id) VALUES (?, ?)', array($product_id, $user_id));
 	}
 }

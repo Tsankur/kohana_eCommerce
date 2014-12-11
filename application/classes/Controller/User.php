@@ -39,6 +39,7 @@ class Controller_User extends Controller {
 										$_SESSION['firstName'] = $_POST['firstName'];
 										$_SESSION['name'] = $_POST['name'];
 										$_SESSION['id'] = $userid;
+										$_SESSION['email'] = $user['email'];
 										$this->redirect($referer);
 									}
 									else
@@ -126,6 +127,7 @@ class Controller_User extends Controller {
 									$_SESSION['name'] = $user['name'];
 									$_SESSION['id'] = $user['id'];
 									$_SESSION['applang'] = $user['language'];
+									$_SESSION['email'] = $user['email'];
 									$this->redirect($referer);
 								}
 								else
@@ -181,6 +183,7 @@ class Controller_User extends Controller {
 	{
 		$cart = $_SESSION['cart'];
 		session_destroy();
+		session_start();
 		$_SESSION['cart'] = $cart;
 		$this->redirect($this->request->referrer());
 	}

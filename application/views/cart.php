@@ -17,22 +17,22 @@
 				<div id="info-form" class="clearfix">
 					<form>
 						<div class=" col-sm-12">
-							<input type="text" class="form-control" name="firstname" id="firstname" placeholder="<?= __('Firstname')?>">
+							<input required type="text" class="form-control" name="firstname" id="firstname" placeholder="<?= __('Firstname')?>">
 						</div>
 						<div class=" col-sm-12">
-							<input type="text" class="form-control" name="name" id="name" placeholder="<?= __('Name')?>">
+							<input required type="text" class="form-control" name="name" id="name" placeholder="<?= __('Name')?>">
 						</div>
 						<div class=" col-sm-8">
-							<input type="text" class="form-control" name="card_number" id="card_number" placeholder="<?= __('Card number')?>">
+							<input required type="text" class="form-control" name="card_number" id="card_number" placeholder="<?= __('Card number')?>">
 						</div>
 						<div class=" col-sm-4">
-							<input type="text" class="form-control" name="cvv" id="cvv" placeholder="<?= __('Vcc')?>">
+							<input required type="text" class="form-control" name="cvv" id="cvv" placeholder="<?= __('Vcc')?>">
 						</div>
 						<div class=" col-sm-7">
-							<input type="text" class="form-control" name="year" id="year" placeholder="<?= __('Year')?>">
+							<input required type="text" class="form-control" name="year" id="year" placeholder="<?= __('Year')?>">
 						</div>
 						<div class=" col-sm-5">
-							<input type="text" class="form-control" name="month" id="month" placeholder="<?= __('Month')?>">
+							<input required type="text" class="form-control" name="month" id="month" placeholder="<?= __('Month')?>">
 						</div>
 					</form>
 				</div>

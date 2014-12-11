@@ -6,9 +6,6 @@
 					var cart = <?= json_encode($cart);?>;
 					var myproducts = "<?= $myproducts ?>";
 				</script>
-				<div class="popularProducts col-sm-12">
-					
-				</div>
 				<aside class="col-sm-3">
 					<div id="sort_types">
 						<p><?= __('SORT BY');?> :</p>

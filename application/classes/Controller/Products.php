@@ -30,7 +30,6 @@ class Controller_Products extends Controller {
 		$view = View::Factory('index');
 		$view->cart = $this->cart;
 		$view->myproducts = false;
-		$view->popularProducts = $productManager->GetPopularProducts(I18N::lang());
 		$view->categories = $categoryManager->GetCategories();
 		$view->platforms = $platformManager->GetPlatforms();
 		$this->response->body($header.$view);
@@ -70,7 +69,6 @@ class Controller_Products extends Controller {
 			$view = View::Factory('index');
 			$view->cart = $this->cart;
 			$view->myproducts = true;
-			$view->popularProducts = $productManager->GetPopularProducts(I18N::lang());
 			$view->categories = $categoryManager->GetCategories();
 			$view->platforms = $platformManager->GetPlatforms();
 			$this->response->body($header.$view);

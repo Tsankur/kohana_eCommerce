@@ -67,35 +67,72 @@ class Controller_Ajax extends Controller
 		{
 			if(count($_SESSION['cart']) > 0)
 			{
-				if(isset($_POST['name']) && isset($_POST['firstname']) && isset($_POST['card_type']) && isset($_POST['card_number']) && isset($_POST['cvv']) && isset($_POST['monh']) && isset($_POST['year']))
+				if(isset($_POST['name']) && isset($_POST['firstname']) && isset($_POST['card_type']) && isset($_POST['card_number']) && isset($_POST['cvv']) && isset($_POST['month']) && isset($_POST['year']))
 				{
 					$total = 0;
 					$taxe = 0;
+					$sells = array();
 					$paypal = new Helper_Paypal('application/config/config.ini');
+					$productManager = new Model_ProductManager();
+					$ownedProducts = $productManager->GetProductsFor($_SESSION['id']);
+					$ownedProductsreduced = array();
+					foreach ($ownedProducts as $value)
+					{
+						array_push($ownedProductsreduced, $value['product_id']);
+					}
 					foreach ($_SESSION['cart'] as $product_id)
 					{
-						$productManager = new Model_ProductManager();
-						$product = $productManager->GetProductShort($this->request->param('id'));
+						$product = $productManager->GetProductShort($product_id);
 						if($product)
 						{
-							$paypal->addItem($product['name'], $product['name'], 1, $product['price'], ($product['price']/6));
-							$total += $product['price'];
+							if(!in_array($product_id, $ownedProductsreduced))
+							{
+								$paypal->addItem(urlencode($product['name']), urlencode($product['name']), 1, $product['price'], ($product['price']/6));
+								$total += $product['price'];
+							}
+							array_push($sells, $product_id);
 						}
 					}
-					$paypal->setCard($_POST['card_type'], $_POST['card_number'], $_POST['monh'], $_POST['year'], $_POST['cvv'], $_POST['firstname'], $_POST['name']);
-					$paypal->setTotal(0, $total/6, $total, $total);
-					
-					$this->sendBack(array(
-						"status" => "success",
-						"message" => 'Tout est bon'
-						));
-					//$this->sendBack($payment = $paypal->send());
+					if(count($sells) > 0)
+					{
+						$paypal->setCard($_POST['card_type'], $_POST['card_number'], $_POST['month'], $_POST['year'], $_POST['cvv'], $_POST['firstname'], $_POST['name']);
+						$paypal->setTotal(0, $total/6, $total - $total/6, $total);
+						$result = array(
+							"status" => "success",
+							"message" => 'Félicitation'
+							);
+						//$result = $paypal->send();
+						if($result['status'] == 'success')
+						{
+							foreach ($sells as $product_id)
+							{
+								if(!in_array($product_id, $ownedProductsreduced))
+								{
+									$productManager->BuyProduct($product_id);
+									$productManager->AddOwnedProduct($_SESSION['id'], $product_id);
+								}
+								if(in_array($product_id, $_SESSION['cart']))
+								{
+									array_splice($_SESSION['cart'], array_search($product_id, $_SESSION['cart']), 1);
+								}
+							}
+						}
+						$result['sells'] = $sells;
+						$this->sendBack($result);
+					}
+					else
+					{
+						$this->sendBack(array(
+							"status" => "error",
+							"error" => 'Aucun produit trouver'
+							));
+					}
 				}
 				else
 				{
 					$this->sendBack(array(
 						"status" => "error",
-						"error" => 'Champ non remplit'
+						"error" => 'Champ non rempli'
 						));
 				}
 			}

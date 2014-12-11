@@ -221,6 +221,35 @@ div.product>div>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.b
 	visibility: visible;
 }
 
+.page-links
+{
+	margin-top: 10px;
+	display: flex;
+	justify-content: space-between;
+}
+.page-links>div
+{
+	display: flex;
+}
+.page-link
+{
+	padding: 5px 10px;
+	border-radius: 5px;
+	background-color: #EEE;
+}
+.page-link+.page-link
+{
+	margin-left: 5px;
+}
+.page-link[disabled]
+{
+	color: #DDD;
+}
+.page-link.selected, .page-link:hover
+{
+	background-color: #333;
+	color: white;
+}
 .add-to-cart-text
 {
 	visibility: hidden;
@@ -233,7 +262,7 @@ div.product>div>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.b
 {
 	position: fixed;
 	z-index: 60;
-	top: 60px;
+	top: 63px;
 	right: 0px;
 }
 .shopping-cart>h1
