@@ -10,16 +10,17 @@ class Controller_Ajax extends Controller
 	}
 	public function action_products()
 	{
+		$_SESSION['filter'] = array($this->request->param('sort_type'), $this->request->param('category_id'), $this->request->param('platform_id'), $this->request->param('page'), $this->request->param('search'));
 		$productManager = new Model_ProductManager();
-		$this->sendBack($productManager->GetProductsBy($this->request->param('sort_type'), $this->sortdesc[$this->request->param('sort_type')], I18N::lang(), $this->request->param('category_id'), $this->request->param('platform_id'), $this->request->param('page')));
+		$this->sendBack($productManager->GetProductsBy($this->request->param('sort_type'), $this->sortdesc[$this->request->param('sort_type')], I18N::lang(), $this->request->param('category_id'), $this->request->param('platform_id'), $this->request->param('page'), $this->request->param('search')));
 	}
 	public function action_myproducts()
 	{
 		if(isset($_SESSION['name']))
 		{
+			$_SESSION['filter'] = array($this->request->param('sort_type'), $this->request->param('category_id'), $this->request->param('platform_id'), $this->request->param('page'), $this->request->param('search'));
 			$productManager = new Model_ProductManager();
-			$this->sendBack($productManager->GetProductsByFor($this->request->param('sort_type'), $_SESSION['id'], $this->sortdesc[$this->request->param('sort_type')], I18N::lang(), $this->request->param('category_id'), $this->request->param('platform_id'), $this->request->param('page')));
-		}
+			$this->sendBack($productManager->GetProductsByFor($this->request->param('sort_type'), $_SESSION['id'], $this->sortdesc[$this->request->param('sort_type')], I18N::lang(), $this->request->param('category_id'), $this->request->param('platform_id'), $this->request->param('page'), $this->request->param('search')));		}
 		else
 		{
 			$this->sendBack(0);
@@ -28,6 +29,7 @@ class Controller_Ajax extends Controller
 	public function action_getproduct()
 	{
 		$productManager = new Model_ProductManager();
+
 		$this->sendBack($productManager->GetProductShort($this->request->param('id')));
 	}
 	public function action_addtocart()
@@ -116,6 +118,10 @@ class Controller_Ajax extends Controller
 									array_splice($_SESSION['cart'], array_search($product_id, $_SESSION['cart']), 1);
 								}
 							}
+							$email = $paypal->getEmailContent();
+						
+							$mailler = new Helper_Mail('application/config/config.ini');
+							$mailler->send($_SESSION['email'], 'Your GOS order', $email);
 						}
 						$result['sells'] = $sells;
 						$this->sendBack($result);

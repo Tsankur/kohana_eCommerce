@@ -25,10 +25,24 @@ div.main>div>aside>div>ul>li
 	padding: 4px;
 	padding-left: 20px;
 }
+div.main>div>aside>div>ul>li+li
+{
+	margin-top: 2px;
+}
+div.main>div>aside>div>ul>li:not(.selected):hover
+{
+	cursor: pointer;
+	background-color: lightgrey;
+	border-radius: 5px;
+}
 div.main>div>aside>div>ul>li.selected
 {
 	background-color: lightgrey;
 	border-radius: 5px;
+}
+#reset-filter
+{
+	width: 100%;
 }
 div.main>div>div.popularProducts
 {
@@ -224,6 +238,7 @@ div.product>div>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.b
 .page-links
 {
 	margin-top: 10px;
+	margin-bottom: 10px;
 	display: flex;
 	justify-content: space-between;
 }
@@ -233,9 +248,12 @@ div.product>div>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.b
 }
 .page-link
 {
+	min-width: 40px;
 	padding: 5px 10px;
 	border-radius: 5px;
 	background-color: #EEE;
+	color: black;
+	text-align: center;
 }
 .page-link+.page-link
 {
@@ -245,10 +263,15 @@ div.product>div>div:last-of-type:hover>p.add-to-cart-text, div.producthead>div.b
 {
 	color: #DDD;
 }
-.page-link.selected, .page-link:hover
+.page-link.selected, .page-link:not([disabled]):hover
 {
-	background-color: #333;
+	background-color: #666;
 	color: white;
+	text-decoration: none;
+}
+.page-link:not(.selected):not([disabled]):hover
+{
+	cursor: pointer;
 }
 .add-to-cart-text
 {

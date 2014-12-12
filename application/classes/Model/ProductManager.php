@@ -3,7 +3,7 @@ class Model_ProductManager
 {
 	private $db;
 	private $allowedSort;
-	private $productsPerPage = 1;
+	private $productsPerPage = 6;
 	function __construct()
 	{
 		$this->allowedSort = array('add_date', 'sells', 'views', 'name');
@@ -24,7 +24,7 @@ class Model_ProductManager
 		$result['platforms'] = $this->db->query('SELECT platforms.name FROM platforms_relationship INNER JOIN platforms ON platforms_relationship.platform_id = platforms.id WHERE platforms_relationship.product_id = ?', array($id));
 		return $result;
 	}
-	function GetProductsBy($sortType, $desc = false, $lang = 'en-us', $category_id = 0, $platform_id = 0, $page = 0)
+	function GetProductsBy($sortType, $desc = false, $lang = 'en-us', $category_id = 0, $platform_id = 0, $page = 0, $search ='')
 	{
 		$result = array();
 		if(in_array($sortType, $this->allowedSort))
@@ -57,6 +57,19 @@ class Model_ProductManager
 			{
 				$request .= ' platforms_relationship.platform_id = :plateform_id';
 			}
+			if(strlen($search) > 0)
+			{
+				if($platform_id == 0 && $category_id == 0)
+				{
+					$request .= ' WHERE';
+				}
+				else
+				{
+					$request .= ' AND';
+				}
+				$request .= ' products.name LIKE :search';
+				$parameters['search'] = '%'.$search.'%';
+			}
 			$request .= ' ORDER BY '.$sortType;
 			if($desc)
 			{
@@ -73,7 +86,7 @@ class Model_ProductManager
 		}
 		return null;	
 	}
-	function GetProductsByFor($sortType, $user_id, $desc = false, $lang = 'en-us', $category_id = 0, $platform_id = 0, $page = 0)
+	function GetProductsByFor($sortType, $user_id, $desc = false, $lang = 'en-us', $category_id = 0, $platform_id = 0, $page = 0, $search ='')
 	{
 		$result = array();
 		if(in_array($sortType, $this->allowedSort))
@@ -108,6 +121,11 @@ class Model_ProductManager
 			if($platform_id > 0)
 			{
 				$request .= ' platforms_relationship.platform_id = :plateform_id';
+			}
+			if(strlen($search) > 0)
+			{
+				$request .= ' AND products.name LIKE :search';
+				$parameters['search'] = '%'.$search.'%';
 			}
 			$request .= ' ORDER BY '.$sortType;
 			if($desc)

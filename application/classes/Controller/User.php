@@ -39,7 +39,7 @@ class Controller_User extends Controller {
 										$_SESSION['firstName'] = $_POST['firstName'];
 										$_SESSION['name'] = $_POST['name'];
 										$_SESSION['id'] = $userid;
-										$_SESSION['email'] = $user['email'];
+										$_SESSION['email'] = $_POST['email'];
 										$this->redirect($referer);
 									}
 									else
@@ -182,9 +182,11 @@ class Controller_User extends Controller {
 	public function action_logout()
 	{
 		$cart = $_SESSION['cart'];
+		$filter = $_SESSION['filter'];
 		session_destroy();
 		session_start();
 		$_SESSION['cart'] = $cart;
+		$_SESSION['filter'] = $filter;
 		$this->redirect($this->request->referrer());
 	}
 

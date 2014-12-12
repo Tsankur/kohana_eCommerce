@@ -4,7 +4,9 @@ var sort_type = 'add_date';
 var page = 0;
 var productsDiv;
 var cartProductsDiv;
+var searchInput;
 var platformsEquivalent = {'Mac':'apple', 'Windows':'windows', 'Android': 'android', 'Linux': 'linux'};
+var searchTimeout = null;
 // Extend the default Number object with a formatMoney() method:
 // usage: someVar.formatMoney(decimalPlaces, symbol, thousandsSeparator, decimalSeparator)
 // defaults: (2, "$", ",", ".")
@@ -24,70 +26,115 @@ function getProducts()
 {
 	productsDiv.empty();
 	$('#waiting_spinner').show();
-	$.ajax(baseURL+(myproducts?"ajax/myproducts/":"ajax/products/")+sort_type+"/"+category_id+"/"+platform_id+"/"+page).done(function(result){
-		var products = result['products'];
-		for (var i = 0; i < products.length; i++)
-		{
-			var product = products[i];
-			var incart = (product['id'] in cart);
-			var elem = '<a href="'+baseURL+'product/'+product['id']+'" title="'+product['name']+'"><div class="product">';
-			elem += '<div><img src="'+baseURL+'assets/images/products/'+product['image']+'" />';
-			elem += '<p>'+product['name']+'</p></div>';
-			elem += '<div><div class="platforms">';
-			var platforms = product['platforms'];
-			for (var j = 0; j < platforms.length; j++)
-			{
-				elem += '<span class="fa fa-'+platformsEquivalent[platforms[j]['name']]+'"></span>';
-			}
-			elem += '</div>';
-			if(!myproducts)
-			{
-				elem += '<div data="'+product['id']+'" class="add-to-cart'+(incart?' selected':'')+'"><p class="add-to-cart-text">'+(incart?checkoutText:addToCartText)+'</p>';
-				elem += '<p class="price">'+parseFloat(product['price']).formatMoney()+'</p></div>';
-			}
-			elem += '</div></div></a>';
-			productsDiv.append(elem);
-		}
+	$.ajax(baseURL+(myproducts?"ajax/myproducts/":"ajax/products/")+sort_type+"/"+category_id+"/"+platform_id+"/"+page+"/"+searchInput.val()).done(function(result){
 		var pageCount = result['pageCount'];
-		var paginationElem = '<div class="page-links">';
-		if(page <= 0)
+		if(page >= pageCount)
 		{
-			paginationElem += '<span class="page-link" disabled>« Précédent</span>';
+			page = Math.ceil(pageCount)-1;
+			getProducts();
 		}
 		else
 		{
-			paginationElem += '<a class="page-link" data="'+(page)+'">« Précédent</a>';
-		}
-		paginationElem += "<div>";
-		for (var i=0; i < pageCount; i++)
-		{
-			if(i == page)
+			var paginationElem = '<div class="page-links">';
+			if(page <= 0)
 			{
-				paginationElem += '<span class="page-link selected">'+(i+1)+'</span>';
+				paginationElem += '<span class="page-link" disabled>« Précédent</span>';
 			}
 			else
 			{
-				paginationElem += '<a class="page-link" data="'+(i+1)+'">'+(i+1)+'</a>';
+				paginationElem += '<a class="page-link" data="'+(page)+'">« Précédent</a>';
 			}
-		}
-		paginationElem += "</div>";
-		if(page >= pageCount - 1)
-		{
-			paginationElem += '<span class="page-link" disabled>Suivant »</span>';
-		}
-		else
-		{
-			paginationElem += '<a class="page-link" data="'+(page+2)+'">Suivant »</a>';
-		}
-		paginationElem += "</div>"
-		productsDiv.append(paginationElem);
+			paginationElem += "<div>";
+			if(pageCount > 10)
+			{
+				if(page > 4)
+				{
+					paginationElem += '<a class="page-link" data="1">1</a>';
+				}
+				if(page > 5)
+				{
+					paginationElem += '<span>...</span>';
+				}
+			}
+			var begin = (pageCount > 10)?(Math.min(Math.max(0, page-4), pageCount-10)):0;
+			var end = (pageCount > 10)?(Math.max(Math.min(pageCount, page+5), 10)):pageCount;
+			for (var i=begin; i < end; i++)
+			{
+				if(i == page)
+				{
+					paginationElem += '<span class="page-link selected">'+(i+1)+'</span>';
+				}
+				else
+				{
+					paginationElem += '<a class="page-link" data="'+(i+1)+'">'+(i+1)+'</a>';
+				}
+			}
+			if(pageCount > 10)
+			{
+				if(page < pageCount-6)
+				{
+					paginationElem += '<span>...</span>';
+				}
+				if(page < pageCount-5)
+				{
+					paginationElem += '<a class="page-link" data="'+pageCount+'">'+pageCount+'</a>';
+				}
+			}
+			paginationElem += "</div>";
+			if(page >= pageCount - 1)
+			{
+				paginationElem += '<span class="page-link" disabled>Suivant »</span>';
+			}
+			else
+			{
+				paginationElem += '<a class="page-link" data="'+(page+2)+'">Suivant »</a>';
+			}
+			paginationElem += "</div>"
+			productsDiv.append(paginationElem);
+			if(pageCount == 0)
+			{
+				productsDiv.append("<div><p>Aucun produit ne correspond a votre recherche</p></div>");
+			}
+			var products = result['products'];
+			for (var i = 0; i < products.length; i++)
+			{
+				var product = products[i];
+				var incart = (product['id'] in cart);
+				var elem = '<a href="'+baseURL+'product/'+product['id']+'" title="'+product['name']+'"><div class="product">';
+				elem += '<div><img src="'+baseURL+'assets/images/products/'+product['image']+'" />';
+				elem += '<p>'+product['name']+'</p></div>';
+				elem += '<div><div class="platforms">';
+				var platforms = product['platforms'];
+				for (var j = 0; j < platforms.length; j++)
+				{
+					elem += '<span class="fa fa-'+platformsEquivalent[platforms[j]['name']]+'"></span>';
+				}
+				elem += '</div>';
+				if(!myproducts)
+				{
+					elem += '<div data="'+product['id']+'" class="add-to-cart'+(incart?' selected':'')+'"><p class="add-to-cart-text">'+(incart?checkoutText:addToCartText)+'</p>';
+					elem += '<p class="price">'+parseFloat(product['price']).formatMoney()+'</p></div>';
+				}
+				elem += '</div></div></a>';
+				productsDiv.append(elem);
+			}
 
+			productsDiv.append(paginationElem);
 
-		$('#waiting_spinner').hide();
-		$('.add-to-cart').on('click', function(e){
-			e.preventDefault();
-			addToCart(this, e);
-		});
+			$(".page-link[data]").on('click', function(e){
+				if(page != $(this).attr("data") - 1)
+				{
+					page = $(this).attr("data") - 1;
+					getProducts();
+				}
+			});
+
+			$('#waiting_spinner').hide();
+			$('.add-to-cart').on('click', function(e){
+				e.preventDefault();
+				addToCart(this, e);
+			});
+		}
 	});
 }
 function OpenCart()
@@ -222,6 +269,19 @@ function checkoutPayment()
 }
 $(function()
 {
+	searchInput = $("#search");
+	if(filter != undefined)
+	{
+		sort_type = filter[0];
+		category_id = filter[1];
+		platform_id = filter[2];
+		page = filter[3];
+		searchInput.val(filter[4])
+	}
+	$("#categories>ul>li[data="+category_id+"]").addClass("selected");
+	$("#platforms>ul>li[data="+platform_id+"]").addClass("selected");
+	$("#sort_types>ul>li[data="+sort_type+"]").addClass("selected");
+	console.log(filter);
 	$("#info-form").hide();
 	$('#waiting_spinner').hide();
 	$('#payment_waiting_spinner').hide();
@@ -259,13 +319,6 @@ $(function()
 			getProducts();
 		}
 	});
-	$(".pagelink").on('click', function(e){
-		if(page != $(this).attr("data"))
-		{
-			page = $(this).attr("data");
-			getProducts();
-		}
-	});
 	$(".shopping-cart>h1").on('click', function(e)
 	{
 		OpenCart();
@@ -281,6 +334,28 @@ $(function()
 	$("#checkout").on('click', function(e)
 	{
 		checkoutPayment();
+	});
+	$("#reset-filter").on('click', function(e)
+	{
+		category_id = 0;
+		platform_id = 0;
+		sort_type = "add_date";
+		$("#sort_types>ul>li.selected").removeClass("selected");
+		$("#categories>ul>li.selected").removeClass("selected");
+		$("#platforms>ul>li.selected").removeClass("selected");
+		searchInput.val('');
+		$("#categories>ul>li[data="+category_id+"]").addClass("selected");
+		$("#platforms>ul>li[data="+platform_id+"]").addClass("selected");
+		$("#sort_types>ul>li[data="+sort_type+"]").addClass("selected");
+		page = 0;
+		getProducts();
+	});
+	searchInput.on('keyup', function(){
+		if(searchTimeout)
+		{
+			clearTimeout(searchTimeout);
+		}
+		searchTimeout = setTimeout(getProducts, 1000);
 	});
 	console.log(cart);
 	updateCart();

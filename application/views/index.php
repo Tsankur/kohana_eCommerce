@@ -5,12 +5,16 @@
 					var checkoutText = "<?= __('Checkout'); ?>";
 					var cart = <?= json_encode($cart);?>;
 					var myproducts = "<?= $myproducts ?>";
+					<?php if(isset($_SESSION['filter'])): ?>
+						var filter = <?= json_encode($_SESSION['filter']);?>;
+					<?php endif; ?>
 				</script>
 				<aside class="col-sm-3">
+					<input id="search" type="text" placeholder="Search">
 					<div id="sort_types">
 						<p><?= __('SORT BY');?> :</p>
 						<ul>
-							<li class="selected" data="add_date"><?= __('Newest');?></li>
+							<li data="add_date"><?= __('Newest');?></li>
 							<li data="sells"><?= __('Bestselling');?></li>
 							<li data="views"><?= __('Views');?></li>
 							<li data="name"><?= __('Alphabetical');?></li>
@@ -19,7 +23,7 @@
 					<div id="platforms">
 						<p><?= __('PLATFORMS:');?></p>
 						<ul>
-							<li class="selected" data="0"><?= __('All');?></li>
+							<li data="0"><?= __('All');?></li>
 							<?php  foreach ($platforms as $platform): ?>
 							<li data="<?= $platform['id']?>"><?= __($platform['name']);?></li>
 							<?php endforeach; ?>
@@ -28,12 +32,13 @@
 					<div id="categories">
 						<p><?= __('CATEGORIES:');?></p>
 						<ul>
-							<li class="selected" data="0"><?= __('All');?></li>
+							<li data="0"><?= __('All');?></li>
 							<?php  foreach ($categories as $category): ?>
 							<li data="<?= $category['id']?>"><?= __($category['name']);?></li>
 							<?php endforeach; ?>
 						</ul>
 					</div>
+					<button class="btn btn-danger" id="reset-filter">Reset</button>
 				</aside>
 				<div id="waiting_spinner">
 					<p>Loading</p>

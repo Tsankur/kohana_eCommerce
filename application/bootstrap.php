@@ -165,7 +165,7 @@ Route::set('ajax', 'ajax/removefromcart(/<id>)')
 		'action'     => 'removefromcart',
 	));
 
-Route::set('ajax', 'ajax/<action>(/<sort_type>(/<category_id>(/<platform_id>(/<page>))))', array('action'=>'(products|myproducts)'))
+Route::set('ajax', 'ajax/<action>(/<sort_type>(/<category_id>(/<platform_id>(/<page>(/<search>)))))', array('action'=>'(products|myproducts)'))
 	->defaults(array(
 		'controller' => 'ajax',
 		'action'     => 'products',
@@ -173,6 +173,7 @@ Route::set('ajax', 'ajax/<action>(/<sort_type>(/<category_id>(/<platform_id>(/<p
 		'category_id'=> '0',
 		'platform_id'=> '0',
 		'page'       => '0',
+		'search'	 => '',
 	));
 Route::set('user', 'user(/<action>(/<id>))')
 	->defaults(array(

@@ -123,4 +123,19 @@ class Helper_Paypal
 			);
 	}
 
+	public function getEmailContent()
+	{
+		$email = '<table>';
+		$email .= '<thead><tr><th>Name</th><th>Price</th></tr></thead><tbody>';
+		$total = 0;
+		foreach ($this->items as $item)
+		{
+			$email .= '<tr><td>'.$item->getName().'</td>';
+			$email .= '<td style="text-align: right;">'.$item->GetPrice().' €</td><tr>';
+			$total += $item->GetPrice();
+		}
+		$email .= '<tr><td>Total</td><td style="text-align: right;">'.number_format($total, 2).' €</td></tr>';
+		$email .= '</tbody></table>';
+		return $email;
+	}
 }
